@@ -1,6 +1,6 @@
 # Mapping Tool
 ====================
-This is an example of a shiny application using random data to generate choropleth maps based on tmap library. 
+This is an example of a shiny application that uses random data to generate choropleth maps. 
 The final application can be found at: https://arevaju.shinyapps.io/mapping_tool
 
 Acknowlegments
