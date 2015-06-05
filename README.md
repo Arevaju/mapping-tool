@@ -5,4 +5,4 @@ The final application can be found at: https://arevaju.shinyapps.io/mapping_tool
 
 Acknowlegments
 ====================
-* Martijn Tennekes for tmap library and the authors of shiny, sp and RColorBrewer.
+* Martijn Tennekes for tmap and the authors of shiny, sp and RColorBrewer libraries.
