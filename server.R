@@ -60,12 +60,20 @@ shinyServer(function(input, output, session){
     } 
   })
 
-  output$map <- renderPlot({
-    
+  
+  output$breakCont<-reactive({ 
+    if(input$style == "fixed")   { 
+      output$breakCont <-renderUI(({ textInput("nbreaks", label= 'Enter manual intervals separated by commas', '1,10,25,50')})) 
+    } 
+    outputOptions(output, 'breakCont', suspendWhenHidden=FALSE)
+  })
+  
+  
+  output$map <- renderPlot({  
     validate(
         need(input$fil != "", "Please select the list of parameters with the filter on the left to generate your map.")) 
     
-    if (input$dat== "nuts0"){ 
+    if ((input$dat== "nuts0") & (input$style== "fixed")){ 
       
       withProgress(message = 'Generating your map...',
                    detail = '', value = 0, {
@@ -78,11 +86,12 @@ shinyServer(function(input, output, session){
     tm_shape(Europe) +tm_fill( style="kmeans", textNA="Non-European countries") +
     qtm(passData4(),  
         title= (text=paste0(input$fil, "-YEAR: ", input$year4)),
+        fill.breaks=  scan(text = input$nbreaks, sep = ',', encoding = "UTF-8"),
         title.snap.to.legend = TRUE,
         legend.title.size = 0.00001, 
         fill.palette= input$pal,
         fill.style = input$style,
-        fill.n = input$ncuts,
+      # fill.n = input$ncuts,
         fill = input$fil,          
         scale = 1.2,
         draw.frame = TRUE,
@@ -99,7 +108,43 @@ shinyServer(function(input, output, session){
         legend.width = 0.40,        
         )+ tm_scale_bar(size = 0.7, position = c(0.6, 0.001, 0.3)) + tm_credits("(c) Randbee Consultants", position=c("left", "bottom"))   
     }
-    else {
+    else if ( (input$dat== "nuts0") & (input$style != "fixed") ){ 
+      
+      withProgress(message = 'Generating your map...',
+                   detail = '', value = 0, {
+                     for (i in 1:10) {
+                       incProgress(1/10)
+                       Sys.sleep(0.25)
+                     }
+                   })
+      
+      tm_shape(Europe) +tm_fill( style="kmeans", textNA="Non-European countries") +
+        qtm(passData4(),  
+            title= (text=paste0(input$fil, "-YEAR: ", input$year4)),
+           # fill.breaks=  scan(text = input$nbreaks, sep = ',', encoding = "UTF-8"),
+            title.snap.to.legend = TRUE,
+            legend.title.size = 0.00001, 
+            fill.palette= input$pal,
+            fill.style = input$style,
+            fill.n = input$ncuts,
+            fill = input$fil,          
+            scale = 1.2,
+            draw.frame = TRUE,
+            borders = "grey", 
+            fill.textNA="Non-European countries",
+            layout.bg.color = '#E6FFFF',
+            legend.bg.color = "white", 
+            legend.frame="gray50",
+            #  asp = 0,
+            legend.position = c("left","top"),
+            legend.is.portrait = FALSE, 
+            ## bottom left, bottom right, up, bottom
+            inner.margins = c(0.01, -0.3, -0.01, -0.5),
+            legend.width = 0.40,        
+        )+ tm_scale_bar(size = 0.7, position = c(0.6, 0.001, 0.3)) + tm_credits("(c) Randbee Consultants", position=c("left", "bottom"))   
+    }
+      
+    else if ( (input$dat== "nuts2") & (input$style == "fixed") ) {
       withProgress(message = 'Generating your map...',
                    detail = '', value = 0, {
                      for (i in 1:10) {
@@ -110,11 +155,12 @@ shinyServer(function(input, output, session){
       tm_shape(Europe) +tm_fill( style="kmeans", textNA="Non-European countries") +
       qtm(passData5(), 
           title= (text=paste0(input$fil, "-YEAR: ", input$year4)),
+          fill.breaks=  scan(text = input$nbreaks, sep = ','),
           title.snap.to.legend = TRUE, 
           legend.title.size = 0.00001,
           fill.palette= input$pal,
           fill.style = input$style,
-          fill.n = input$ncuts,
+       #  fill.n = input$ncuts,
           fill = input$fil,          
           scale = 1.2,
           draw.frame = TRUE,
@@ -130,6 +176,39 @@ shinyServer(function(input, output, session){
           inner.margins = c(0.01, -0.3, -0.01, -0.5),
           legend.width = 0.25,      
       )  + tm_scale_bar(size = 0.7, position = c(0.6, 0.001, 0.3)) + tm_credits("(c) Randbee Consultants", position=c("left", "bottom")) + tm_shape(nuts0) + tm_borders("grey35")
+    }
+    else if ( (input$dat== "nuts2") & (input$style != "fixed") ) {
+      withProgress(message = 'Generating your map...',
+                   detail = '', value = 0, {
+                     for (i in 1:10) {
+                       incProgress(1/10)
+                       Sys.sleep(0.25)
+                     }
+                   })
+      tm_shape(Europe) +tm_fill( style="kmeans", textNA="Non-European countries") +
+        qtm(passData5(), 
+            title= (text=paste0(input$fil, "-YEAR: ", input$year4)),
+           # fill.breaks=  scan(text = input$nbreaks, sep = ','),
+            title.snap.to.legend = TRUE, 
+            legend.title.size = 0.00001,
+            fill.palette= input$pal,
+            fill.style = input$style,
+            fill.n = input$ncuts,
+            fill = input$fil,          
+            scale = 1.2,
+            draw.frame = TRUE,
+            borders = "grey", 
+            #   fill.textNA="Non-European countries",
+            layout.bg.color = '#E6FFFF',
+            legend.bg.color = "white", 
+            legend.frame="gray50",
+            # asp = 0,
+            legend.position = c("left","top"),
+            legend.is.portrait = TRUE, 
+            ## bottom left, bottom right, up, bottom
+            inner.margins = c(0.01, -0.3, -0.01, -0.5),
+            legend.width = 0.25,      
+        )  + tm_scale_bar(size = 0.7, position = c(0.6, 0.001, 0.3)) + tm_credits("(c) Randbee Consultants", position=c("left", "bottom")) + tm_shape(nuts0) + tm_borders("grey35")
     }
   })    
   ######### This function is used for exporting them as PDF and png formats
