@@ -104,7 +104,7 @@ shinyServer(function(input, output, session){
         legend.position = c("left","top"),
         legend.is.portrait = FALSE, 
         ## bottom left, bottom right, up, bottom
-        inner.margins = c(0.01, -0.3, -0.01, -0.5),
+        inner.margins = c(0.01, -0.2, -0.01, -0.25),
         legend.width = 0.40,        
         )+ tm_scale_bar(size = 0.7, position = c(0.6, 0.001, 0.3)) + tm_credits("(c) Randbee Consultants", position=c("left", "bottom"))   
     }

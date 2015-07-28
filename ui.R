@@ -24,7 +24,7 @@ library(tmap)
       submitButton("Generate Map")
     ),
 mainPanel(
-  plotOutput("map", height="800px"),
+  plotOutput("map", height="750px"),
   downloadButton("savemap", "Download PDF map"),
   downloadButton("savemap2", "Download PNG map")
 )
